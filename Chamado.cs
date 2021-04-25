@@ -8,11 +8,11 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
 {
     class Chamado
     {    
-        public string nome = null;
-        public string descricao = null;
-        public string equipamento = null;
-        public DateTime data = DateTime.MinValue;
-
+        private string nome = null;
+        private string descricao = null;
+        private string equipamento = null;
+        private DateTime data = DateTime.MinValue;
+        
         public Chamado(DateTime data, string nome, string descricao, string equipamento)
         {
             this.data = data;
@@ -20,7 +20,36 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
             this.descricao = descricao;
             this.equipamento = equipamento;
         }
-        
+
+        public string Nome
+        {
+            get
+            {
+                return nome;
+            }
+        }
+        public DateTime Data
+        {
+            get
+            {
+                return data;
+            }
+        }
+        public string Equipamento
+        {
+            get
+            {
+                return equipamento;
+            }
+        }
+        public string Descricao
+        {
+            get
+            {
+                return nome;
+            }
+        }
+   
         public void Editar(DateTime data, string nome, string descricao, string equipamento)
         {
             this.data = data;

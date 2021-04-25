@@ -49,7 +49,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
 
                         foreach (var equipamento in Equipamentos)
                         {
-                            if (equipamento.serie == serieBusca)
+                            if (equipamento.Serie == serieBusca)
                             {
                                 int serie;
                                 string nome, fabricante;
@@ -74,7 +74,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
 
                         foreach (var equipamento in Equipamentos)
                         {
-                            if (equipamento.serie == serieBusca)
+                            if (equipamento.Serie == serieBusca)
                             {
                                 equipamento.Excluir();
                                 valorEncontrado = true;        //VALIDA VALOR COMO ENCONTRADO
@@ -87,9 +87,9 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     {
                         foreach (var equipamento in Equipamentos)
                         {
-                            if (equipamento.nome != null) //VALIDA PARA NÃO APARECER OBJETO EXCLUIDO
+                            if (equipamento.Nome != null) //VALIDA PARA NÃO APARECER OBJETO EXCLUIDO
                             {
-                                Console.WriteLine($"Série:{equipamento.serie} nome: {equipamento.nome} fabricante: {equipamento.fabricante} preco: {equipamento.preco} data: {equipamento.data.ToShortDateString()}");
+                                Console.WriteLine($"Série:{equipamento.Serie} nome: {equipamento.Nome} fabricante: {equipamento.Fabricante} preco: {equipamento.Preco} data: {equipamento.Data.ToShortDateString()}");
                             }
                         }
                         Console.ReadLine();
@@ -133,7 +133,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
 
                         foreach (var chamado in Chamados)
                         {
-                            if (chamado.nome == titulo)
+                            if (chamado.Nome == titulo)
                             {
                                 string nome, descricao, equipamento;
                                 DateTime data;
@@ -154,7 +154,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
                         bool valorEncontrado = false;
                         foreach (var chamado in Chamados)
                         {
-                            if (chamado.nome == titulo)
+                            if (chamado.Nome == titulo)
                             {
                                 chamado.Excluir();
                                 valorEncontrado = true;
@@ -167,10 +167,10 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     {
                         foreach (var chamado in Chamados)
                         {
-                            if (chamado.nome != null) //VALIDA PARA NÃO APARECER OBJETO EXCLUIDO
+                            if (chamado.Nome != null) //VALIDA PARA NÃO APARECER OBJETO EXCLUIDO
                             {
-                                string diasDif = (DateTime.Now - chamado.data).ToString("dd");
-                                Console.WriteLine($"Título:{chamado.nome} equipamento: {chamado.equipamento} data: {chamado.data.ToShortDateString()} dias em aberto: {diasDif}");
+                                string diasDif = (DateTime.Now - chamado.Data).ToString("dd");
+                                Console.WriteLine($"Título:{chamado.Nome} equipamento: {chamado.Equipamento} data: {chamado.Data.ToShortDateString()} dias em aberto: {diasDif}");
                             }
                         }
                         Console.ReadLine();
