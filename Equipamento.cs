@@ -8,19 +8,28 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
 {
     class Equipamento
     {
- 
+        private bool emuso = false;
         private int serie = 0;
         private string nome = null;
         private string fabricante = null;
         private double preco = 0;
         private DateTime data = DateTime.MinValue;
 
+        public bool Emuso
+        {
+            set { emuso = value; }
+            get
+            {
+                return emuso;
+            }
+        }
         public int Serie
         {
             get
             {
                 return serie;
             }
+            
         }
         public string Nome
         {

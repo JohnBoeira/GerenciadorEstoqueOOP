@@ -12,6 +12,7 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
         private string nome = null;
         private string descricao = null;
         private string equipamento = null;
+        private int serieEquipamento = 0;
         private DateTime data = DateTime.MinValue;
 
         public string Nome
@@ -19,6 +20,13 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
             get
             {
                 return nome;
+            }
+        }
+        public int SerieEquipamento
+        {
+            get
+            {
+                return serieEquipamento;
             }
         }
         public DateTime Data
@@ -42,22 +50,24 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
                 return nome;
             }
         }
-        public Chamado(DateTime data, string nome, string descricao, string equipamento)
+        public Chamado(DateTime data, string nome, string descricao, string equipamento, int serie)
         {
+            this.serieEquipamento = serie;
             this.data = data;
             this.nome = nome;
             this.descricao = descricao;
             this.equipamento = equipamento;
         }   
-        public void Editar(DateTime data, string nome, string descricao, string equipamento)
-        {
-            this.data = data;
+        public void Editar(string nome, string descricao, string equipamento, int serie)
+        {       
             this.nome = nome;
             this.descricao = descricao;
             this.equipamento = equipamento;
+            this.serieEquipamento = serie;
         }
         public void Excluir()
-        {       
+        {
+            serieEquipamento = 0;
             data = DateTime.MinValue;
             nome = null;
             descricao = null;

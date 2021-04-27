@@ -5,12 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+//VALIDAÇÃO DE 6 CARACTERES [OK]
+//VALIDAÇÃO ENTRADAS DE DADOS DO USUÁRIO [OK]
+//VALIDAÇÃO RELAÇAO EQUIPAMENTO PARA CHAMADO [OK?]
+//VALIDAÇÃO DATA CHAMADO DEVE PEGAR DO SO [OK]
+//VALIDAÇÃO NÃO PODE EXCLUIR EQUIPAMENTO COM CHAMADO ABERTO [OK]
+//VALIDAÇÃO DATA DE FABRICAÇÃO NÃO DEVE SER NO FUTURO [OK]
+
 namespace GestãoDeEquipamentos.ConsoleApp
 {
     class Program
     {
         static void Main(string[] args)
-        {
+        {          
             int opcao;
             //lista equipamentos
             List<Equipamento> Equipamentos = new List<Equipamento>();
@@ -61,24 +68,24 @@ namespace GestãoDeEquipamentos.ConsoleApp
                                 equipamento.Editar(data, nome, fabricante, preco, serie); //EDITA equip
                             }
                         }
-                        ValorNaoEncontrado(valorEncontrado);
+                        ValorIncorreto(valorEncontrado);
                     }
                     //excluir
                     else if (opcao2 == 3)
                     {
-                        bool valorEncontrado = false;
-                        Console.WriteLine("Digite a série do produto para edição: ");
+                        bool valorIncorreto = false;
+                        Console.WriteLine("Digite a série do equipamento para exclusão (que não esteja em uso): ");
                         int serieBusca = Convert.ToInt32(Console.ReadLine());
 
                         foreach (var equipamento in Equipamentos)
                         {
-                            if (equipamento.Serie == serieBusca)
-                            {
+                            if (equipamento.Serie == serieBusca && equipamento.Emuso == false)
+                            {                               
                                 equipamento.Excluir();
-                                valorEncontrado = true;        //VALIDA VALOR COMO ENCONTRADO
+                                valorIncorreto = true;        //VALIDA VALOR COMO INCORRETO
                             }
                         }
-                        ValorNaoEncontrado(valorEncontrado);
+                        ValorIncorreto(valorIncorreto);
                     }
                     //listar
                     else if (opcao2 == 4)
@@ -108,16 +115,16 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     //criar 
                     if (opcao2 == 1)
                     {
-                        string nome, descricao, equipamento;
-                        DateTime data;
+                        string nome, descricao, equipamento;                    
 
                         ListandoEquipamentos(Equipamentos); //LISTA EQUIPAMENTOS                      
-                        PedindoValoresChamado(out nome, out descricao, out equipamento, out data);
+                        PedindoValoresChamado(out nome, out descricao, out equipamento);
                         foreach (var item in Equipamentos)
                         {
                             if (item.Serie.ToString() == equipamento)
                             {
-                                Chamados.Add(new Chamado(data, nome, descricao, item.Nome));
+                                Chamados.Add(new Chamado(DateTime.Now, nome, descricao, item.Nome, item.Serie));
+                                item.Emuso = true;
                             }
                             else //VALIDA SE DIGITAR SERIE NÃO EXISTENTE
                             {
@@ -138,14 +145,15 @@ namespace GestãoDeEquipamentos.ConsoleApp
                             if (chamado.Nome == titulo)
                             {
                                 string nome, descricao, equipamento;
-                                DateTime data;
+                                
                                 ListandoEquipamentos(Equipamentos); //LISTA EQUIPAMENTOS
-                                PedindoValoresChamado(out nome, out descricao, out equipamento, out data);
+                                PedindoValoresChamado(out nome, out descricao, out equipamento);
+
                                 foreach (var item in Equipamentos)
                                 {
                                     if (item.Serie.ToString() == equipamento)
                                     {
-                                        chamado.Editar(data, nome, descricao, item.Nome);
+                                        chamado.Editar(nome, descricao, item.Nome,item.Serie);
                                     }
                                     else //VALIDA SE DIGITAR SERIE NÃO EXISTENTE
                                     {
@@ -156,12 +164,11 @@ namespace GestãoDeEquipamentos.ConsoleApp
                             }
                         }
 
-                        ValorNaoEncontrado(valorEncontrado);
+                        ValorIncorreto(valorEncontrado);
                     }
                     //excluir
                     else if (opcao2 == 3)
                     {
-
                         Console.WriteLine("Digite a titulo para EXCLUIR: ");
                         string titulo = Console.ReadLine();
                         bool valorEncontrado = false;
@@ -169,11 +176,18 @@ namespace GestãoDeEquipamentos.ConsoleApp
                         {
                             if (chamado.Nome == titulo)
                             {
+                                foreach (var item in Equipamentos)
+                                {
+                                    if (item.Serie == chamado.SerieEquipamento)
+                                    {
+                                        item.Emuso = false;
+                                    }
+                                }
                                 chamado.Excluir();
                                 valorEncontrado = true;
                             }
                         }
-                        ValorNaoEncontrado(valorEncontrado);
+                        ValorIncorreto(valorEncontrado);
                     }
                     //listar
                     else if (opcao2 == 4)
@@ -226,16 +240,16 @@ namespace GestãoDeEquipamentos.ConsoleApp
             Console.ReadLine();
         }
 
-        private static void ValorNaoEncontrado(bool valorEncontrado)
+        private static void ValorIncorreto(bool valorEncontrado)
         {
             if (valorEncontrado != true)
             {
-                Console.WriteLine("Valor não encontrado!");
+                Console.WriteLine("Valor Incorreto!");
                 Console.ReadLine();
             }
         }
 
-        private static void PedindoValoresChamado(out string nome, out string descricao, out string equipamento, out DateTime data)
+        private static void PedindoValoresChamado(out string nome, out string descricao, out string equipamento)
         {
             bool valoresValidos;
 
@@ -261,12 +275,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
                 Console.WriteLine("Digite Série do equipamento: ");
                 equipamento = Console.ReadLine();
 
-                if (!DateTime.TryParse(Console.ReadLine(), out data))
-                {
-                    valoresValidos = true;
-                    Console.WriteLine("Valor inválido");
-                    Console.ReadLine();
-                }
+                
             } while (valoresValidos);
 
 
@@ -312,8 +321,8 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     Console.ReadLine();
                 }
                 Console.WriteLine("Digite data: nesse formato(YYYY,MM,DD)");
-                if (!DateTime.TryParse(Console.ReadLine(), out data))
-                {
+                if (!DateTime.TryParse(Console.ReadLine(), out data) || data > DateTime.Now)
+                {                    
                     valoresValidos = true;
                     Console.WriteLine("Valor inválido");
                     Console.ReadLine();
