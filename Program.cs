@@ -16,7 +16,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
             List<Equipamento> Equipamentos = new List<Equipamento>();
             List<Chamado> Chamados = new List<Chamado>();
 
-            Inicio:          
+            Inicio:
             Console.Clear();
             Console.WriteLine("Digite a opção: \n 1 Para equipamentos, \n 2 para chamados, \n 3 para sair");
             opcao = Convert.ToInt32(Console.ReadLine());
@@ -27,7 +27,6 @@ namespace GestãoDeEquipamentos.ConsoleApp
                 while (true)
                 {
                     int opcao2 = PedirOpcao();
-
                     //criar
                     if (opcao2 == 1)
                     {
@@ -43,7 +42,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     else if (opcao2 == 2)
                     {
                         bool valorEncontrado = false;
-                        Console.Clear();
+
                         Console.WriteLine("Digite a série do produto para edição: ");
                         int serieBusca = Convert.ToInt32(Console.ReadLine());
 
@@ -55,6 +54,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
                                 string nome, fabricante;
                                 double preco;
                                 DateTime data;
+
                                 PedindoValoresEquipamento(out serie, out nome, out fabricante, out preco, out data);
 
                                 valorEncontrado = true; //VALIDA VALOR COMO ENCONTRADO                             
@@ -66,9 +66,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     //excluir
                     else if (opcao2 == 3)
                     {
-                                             
                         bool valorEncontrado = false;
-                        Console.Clear();
                         Console.WriteLine("Digite a série do produto para edição: ");
                         int serieBusca = Convert.ToInt32(Console.ReadLine());
 
@@ -85,14 +83,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     //listar
                     else if (opcao2 == 4)
                     {
-                        foreach (var equipamento in Equipamentos)
-                        {
-                            if (equipamento.Nome != null) //VALIDA PARA NÃO APARECER OBJETO EXCLUIDO
-                            {
-                                Console.WriteLine($"Série:{equipamento.Serie} nome: {equipamento.Nome} fabricante: {equipamento.Fabricante} preco: {equipamento.Preco} data: {equipamento.Data.ToShortDateString()}");
-                            }
-                        }
-                        Console.ReadLine();
+                        ListandoEquipamentos(Equipamentos);
                     }
                     //voltar
                     else if (opcao2 == 5)
@@ -108,7 +99,7 @@ namespace GestãoDeEquipamentos.ConsoleApp
                 }
             }
             //chamados
-            if (opcao == 2)
+            else if (opcao == 2)
             {
                 Console.Clear();
                 while (true)
@@ -119,14 +110,25 @@ namespace GestãoDeEquipamentos.ConsoleApp
                     {
                         string nome, descricao, equipamento;
                         DateTime data;
-                        PedindoValoresChamado(out nome, out descricao, out equipamento, out data);
 
-                        Chamados.Add(new Chamado(data, nome, descricao, equipamento));
+                        ListandoEquipamentos(Equipamentos); //LISTA EQUIPAMENTOS                      
+                        PedindoValoresChamado(out nome, out descricao, out equipamento, out data);
+                        foreach (var item in Equipamentos)
+                        {
+                            if (item.Serie.ToString() == equipamento)
+                            {
+                                Chamados.Add(new Chamado(data, nome, descricao, item.Nome));
+                            }
+                            else //VALIDA SE DIGITAR SERIE NÃO EXISTENTE
+                            {
+                                Console.WriteLine("Favor digite série existente");
+                            }
+                        }
                     }
                     //editar
                     else if (opcao2 == 2)
-                    {                 
-                        Console.Clear();
+                    {
+
                         Console.WriteLine("Digite a titulo para EXCLUIR: ");
                         string titulo = Console.ReadLine();
                         bool valorEncontrado = false;
@@ -137,18 +139,29 @@ namespace GestãoDeEquipamentos.ConsoleApp
                             {
                                 string nome, descricao, equipamento;
                                 DateTime data;
+                                ListandoEquipamentos(Equipamentos); //LISTA EQUIPAMENTOS
                                 PedindoValoresChamado(out nome, out descricao, out equipamento, out data);
-
+                                foreach (var item in Equipamentos)
+                                {
+                                    if (item.Serie.ToString() == equipamento)
+                                    {
+                                        chamado.Editar(data, nome, descricao, item.Nome);
+                                    }
+                                    else //VALIDA SE DIGITAR SERIE NÃO EXISTENTE
+                                    {
+                                        Console.WriteLine("Favor digite série existente");
+                                    }
+                                }
                                 valorEncontrado = true;
-                                chamado.Editar(data, nome, descricao, equipamento);
                             }
                         }
+
                         ValorNaoEncontrado(valorEncontrado);
                     }
                     //excluir
                     else if (opcao2 == 3)
                     {
-                        Console.Clear();
+
                         Console.WriteLine("Digite a titulo para EXCLUIR: ");
                         string titulo = Console.ReadLine();
                         bool valorEncontrado = false;
@@ -189,10 +202,28 @@ namespace GestãoDeEquipamentos.ConsoleApp
                 }
             }
             //fecha app
-            if (opcao == 3)
+            else if (opcao == 3)
             {
                 Environment.Exit(0);
             }
+            //VALOR INCORRETO
+            else
+            {
+                Console.WriteLine("Valor inválido");
+                Console.ReadLine();
+            }
+        }
+
+        private static void ListandoEquipamentos(List<Equipamento> Equipamentos)
+        {
+            foreach (var equipamento in Equipamentos)
+            {
+                if (equipamento.Nome != null) //VALIDA PARA NÃO APARECER OBJETO EXCLUIDO
+                {
+                    Console.WriteLine($"Série:{equipamento.Serie} nome: {equipamento.Nome} fabricante: {equipamento.Fabricante} preco: {equipamento.Preco} data: {equipamento.Data.ToShortDateString()}");
+                }
+            }
+            Console.ReadLine();
         }
 
         private static void ValorNaoEncontrado(bool valorEncontrado)
@@ -206,44 +237,88 @@ namespace GestãoDeEquipamentos.ConsoleApp
 
         private static void PedindoValoresChamado(out string nome, out string descricao, out string equipamento, out DateTime data)
         {
-            Console.WriteLine("Digite título: ");
-            nome = Console.ReadLine();
-            Console.WriteLine("Digite descricao do equipamento: ");
-            descricao = Console.ReadLine();
-            Console.WriteLine("Digite equipamento: ");
-            equipamento = Console.ReadLine();
-            Console.WriteLine("Digite data: nesse formato(YYYY,MM,DD)");
-            data = Convert.ToDateTime(Console.ReadLine());
+            bool valoresValidos;
+
+            do
+            {
+                valoresValidos = false;
+                Console.WriteLine("Digite título: ");
+                nome = Console.ReadLine();
+                if (nome == "")
+                {
+                    valoresValidos = true;
+                    Console.WriteLine("Título inválido");
+                    Console.ReadLine();
+                }
+                Console.WriteLine("Digite descricao do equipamento: ");
+                descricao = Console.ReadLine();
+                if (descricao == "")
+                {
+                    valoresValidos = true;
+                    Console.WriteLine("descrição inválido");
+                    Console.ReadLine();
+                }
+                Console.WriteLine("Digite Série do equipamento: ");
+                equipamento = Console.ReadLine();
+
+                if (!DateTime.TryParse(Console.ReadLine(), out data))
+                {
+                    valoresValidos = true;
+                    Console.WriteLine("Valor inválido");
+                    Console.ReadLine();
+                }
+            } while (valoresValidos);
+
+
         }
 
         private static void PedindoValoresEquipamento(out int serie, out string nome, out string fabricante, out double preco, out DateTime data)
         {
-            Console.WriteLine("Digite número série: ");
-            serie = Convert.ToInt32(Console.ReadLine());
-            bool nomeValido = false;
+            bool valoresValidos;
 
             do
             {
+                Console.Clear();
+                valoresValidos = false;
                 Console.WriteLine("Digite nome do equipamento: ");
                 nome = Console.ReadLine();
+
                 if (nome.Length < 6)
                 {
-                    nomeValido = true;
-                    Console.WriteLine("Nome inválido");
-
+                    valoresValidos = true;
+                    Console.WriteLine("nome inválido");
+                    Console.ReadLine();                    
                 }
-                else
+                Console.WriteLine("Digite número série: ");
+                if (!int.TryParse(Console.ReadLine(), out serie))
                 {
-                    nomeValido = false;
+                    valoresValidos = true;
+                    Console.WriteLine("Valor inválido");
+                    Console.ReadLine();
                 }
-            } while (nomeValido);
-
-            Console.WriteLine("Digite fabricante do produto: ");
-            fabricante = Console.ReadLine();
-            Console.WriteLine("Digite preco: ");
-            preco = Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Digite data: nesse formato(YYYY,MM,DD)");
-            data = Convert.ToDateTime(Console.ReadLine());
+                Console.WriteLine("Digite fabricante do produto: ");
+                fabricante = Console.ReadLine();
+                if (fabricante == "")
+                {
+                    valoresValidos = true;
+                    Console.WriteLine("Valor inválido");
+                    Console.ReadLine();
+                }
+                Console.WriteLine("Digite preco: ");
+                if (!double.TryParse(Console.ReadLine(), out preco))
+                {
+                    valoresValidos = true;
+                    Console.WriteLine("Valor inválido");
+                    Console.ReadLine();
+                }
+                Console.WriteLine("Digite data: nesse formato(YYYY,MM,DD)");
+                if (!DateTime.TryParse(Console.ReadLine(), out data))
+                {
+                    valoresValidos = true;
+                    Console.WriteLine("Valor inválido");
+                    Console.ReadLine();
+                }
+            } while (valoresValidos);
         }
 
         private static int PedirOpcao()
@@ -254,6 +329,6 @@ namespace GestãoDeEquipamentos.ConsoleApp
             opcao2 = Convert.ToInt32(Console.ReadLine());
             return opcao2;
         }
-        
+
     }
 }

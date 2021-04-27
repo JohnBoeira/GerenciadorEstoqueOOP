@@ -7,19 +7,12 @@ using System.Threading.Tasks;
 namespace GestaoDeEquipamentosOOP.ConsoleApp
 {
     class Chamado
-    {    
+    {
+        
         private string nome = null;
         private string descricao = null;
         private string equipamento = null;
         private DateTime data = DateTime.MinValue;
-        
-        public Chamado(DateTime data, string nome, string descricao, string equipamento)
-        {
-            this.data = data;
-            this.nome = nome;
-            this.descricao = descricao;
-            this.equipamento = equipamento;
-        }
 
         public string Nome
         {
@@ -49,7 +42,13 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
                 return nome;
             }
         }
-   
+        public Chamado(DateTime data, string nome, string descricao, string equipamento)
+        {
+            this.data = data;
+            this.nome = nome;
+            this.descricao = descricao;
+            this.equipamento = equipamento;
+        }   
         public void Editar(DateTime data, string nome, string descricao, string equipamento)
         {
             this.data = data;
@@ -57,7 +56,6 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
             this.descricao = descricao;
             this.equipamento = equipamento;
         }
-
         public void Excluir()
         {       
             data = DateTime.MinValue;
