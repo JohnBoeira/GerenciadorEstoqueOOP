@@ -8,7 +8,7 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
 {
     class Chamado
     {
-        
+
         private string nome = null;
         private string descricao = null;
         private string equipamento = null;
@@ -57,9 +57,9 @@ namespace GestaoDeEquipamentosOOP.ConsoleApp
             this.nome = nome;
             this.descricao = descricao;
             this.equipamento = equipamento;
-        }   
+        }
         public void Editar(string nome, string descricao, string equipamento, int serie)
-        {       
+        {
             this.nome = nome;
             this.descricao = descricao;
             this.equipamento = equipamento;
